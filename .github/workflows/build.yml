@@ -3,6 +3,9 @@ name: build
 on:
   push:
     branches: [main]
+    # 必须显式写 tags：只写 branches 的话，推 tag 根本不会触发 workflow，
+    # 下面那个 release job 就永远不会跑（它的 if 判断的是 tag ref）。
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
