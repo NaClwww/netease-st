@@ -1,0 +1,16 @@
+{
+  "name": "netease-st",
+  "version": "0.1.0",
+  "description": "网易云音乐网页版 · Linux Electron 桌面壳",
+  "main": "src/main.js",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "bash scripts/dev-system-electron.sh",
+    "smoke": "NETEASE_ST_SMOKE=1 bash scripts/dev-system-electron.sh",
+    "probe": "bash scripts/dev-system-electron.sh scripts/probe-capabilities.cjs"
+  },
+  "dependencies": {
+    "mpris-service": "^2.1.2"
+  }
+}

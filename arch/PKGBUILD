@@ -1,0 +1,64 @@
+# Arch Linux 本地打包（自用）。
+#
+# 这是「依赖系统 electron」的省体积方案：包体 < 1MB，Electron 由系统提供。
+# 只适用于 Arch；其他发行版 / 跨发行版分发请改用 electron-builder（见 DESIGN.md 第 7 节）。
+#
+# 用法：在 arch/ 目录下构建
+#   cd arch && makepkg -si
+#
+# 说明：这里用 $startdir 取上一级仓库里的源码，属于本地自用写法；
+#       若要往 AUR 提交，需改成正规的 source=() + 发布 tarball。
+
+pkgname=netease-st
+pkgver=0.1.0
+pkgrel=3
+pkgdesc='网易云音乐网页版 Linux Electron 桌面壳'
+arch=('any')
+url='https://music.163.com/st/webplayer'
+license=('MIT')
+depends=('electron41' 'libayatana-appindicator')
+makedepends=('npm')
+options=('!strip')
+
+build() {
+  cd "$startdir/.."
+  npm install --omit=dev --no-audit --no-fund
+}
+
+package() {
+  install -d "$pkgdir/usr/lib/$pkgname" \
+             "$pkgdir/usr/bin" \
+             "$pkgdir/usr/share/applications" \
+             "$pkgdir/usr/share/icons/hicolor/512x512/apps"
+
+  cp -r "$startdir/../src" "$startdir/../package.json" "$startdir/../node_modules" \
+        "$pkgdir/usr/lib/$pkgname/"
+
+  install -Dm755 /dev/stdin "$pkgdir/usr/bin/$pkgname" <<'WRAPPER'
+#!/bin/sh
+# 解析 Electron 可执行文件。注意 Arch 的版本化包只提供
+# /usr/lib/electronNN/electron，没有 /usr/bin/electron，
+# 所以不能直接 `exec electron`（electron 元包不含任何文件）。
+MAIN=/usr/lib/netease-st/src/main.js
+
+if [ -n "${ELECTRON_BIN:-}" ] && [ -x "$ELECTRON_BIN" ]; then
+  exec "$ELECTRON_BIN" "$MAIN" "$@"
+fi
+if [ -x /usr/lib/electron41/electron ]; then
+  exec /usr/lib/electron41/electron "$MAIN" "$@"
+fi
+for e in /usr/lib/electron4*/electron /usr/lib/electron/electron /usr/bin/electron /opt/electron/electron; do
+  if [ -x "$e" ]; then
+    echo "netease-st: 未找到 electron41，改用 $e" >&2
+    exec "$e" "$MAIN" "$@"
+  fi
+done
+echo "netease-st: 找不到 Electron，请安装：pacman -S electron41" >&2
+exit 1
+WRAPPER
+
+  install -Dm644 "$startdir/$pkgname.desktop" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 "$startdir/../src/assets/icon.png" \
+    "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
+}

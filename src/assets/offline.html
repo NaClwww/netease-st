@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>网易云音乐 · 无法连接</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      font-family: system-ui, "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+      background: #f5f5f7; color: #1d1d1f;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background: #1c1c1e; color: #f5f5f7; }
+      .card { background: #2c2c2e !important; }
+      button { background: #e5484d !important; }
+    }
+    .card {
+      background: #fff; border-radius: 16px; padding: 40px 48px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.12); text-align: center; max-width: 420px;
+    }
+    h1 { font-size: 20px; margin: 0 0 8px; font-weight: 600; }
+    p { margin: 0 0 24px; font-size: 14px; opacity: .7; line-height: 1.6; }
+    button {
+      appearance: none; border: 0; border-radius: 999px;
+      background: #e5484d; color: #fff; font-size: 15px;
+      padding: 10px 28px; cursor: pointer; transition: opacity .15s;
+    }
+    button:hover { opacity: .88; }
+    .hint { margin-top: 20px; font-size: 12px; opacity: .45; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>暂时连不上网络</h1>
+    <p>无法加载网易云音乐网页版，请检查网络连接后重试。</p>
+    <button id="retry">重试</button>
+    <div class="hint" id="hint"></div>
+  </div>
+  <script>
+    const target = new URLSearchParams(location.search).get('target') || 'https://music.163.com/st/webplayer';
+    document.getElementById('hint').textContent = target;
+    document.getElementById('retry').addEventListener('click', () => {
+      location.replace(target);
+    });
+  </script>
+</body>
+</html>

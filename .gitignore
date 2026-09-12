@@ -1,0 +1,10 @@
+node_modules/
+dist/
+out/
+pkg/
+*.AppImage
+*.deb
+*.pkg.tar.zst
+*.log
+# 本地缓存（若启用 B 方案，见 DESIGN.md 2.6）——不要提交网易的产物
+cache/

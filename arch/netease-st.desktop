@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=网易云音乐
+Name[en]=Netease Cloud Music
+GenericName=音乐播放器
+Comment=网易云音乐网页版桌面壳
+Exec=netease-st
+TryExec=netease-st
+Icon=netease-st
+Terminal=false
+Categories=Audio;Music;Player;AudioVideo;
+Keywords=music;netease;网易云;播放器;
+StartupNotify=true
+StartupWMClass=netease-st
