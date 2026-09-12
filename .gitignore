@@ -8,3 +8,8 @@ pkg/
 *.log
 # 本地缓存（若启用 B 方案，见 DESIGN.md 2.6）——不要提交网易的产物
 cache/
+
+# Arch 打包产物（makepkg）。锚定到 /arch/ —— 不能写成 src/，
+# 那会连仓库真正的源码目录一起忽略掉。
+/arch/pkg/
+/arch/src/
